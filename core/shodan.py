@@ -43,12 +43,13 @@ def search_open_omv(api_key):
                 ip = result["ip_str"]
                 port = result["port"]
                 if "http" in result:
-                    prefix = 'http'
-
-                    if str(port) == '443':
-                        prefix += 's'
-
-                    found.append(f"{prefix}://{ip}:{port}")
+                    if str(port) == '80':
+                        found.append(f"http://{ip}")
+                    elif str(port) == '443':
+                        found.append(f"https://{ip}")
+                    else:
+                        found.append(f"http://{ip}:{port}")
+                    
             except:
                 pass
                 
