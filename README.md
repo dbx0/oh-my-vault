@@ -25,7 +25,7 @@ Oh My Vault! is the ultimate framework created to exploit and automate pen testi
 
 ## Installation and usage
 
-### Installation ([pip](https://pypi.org/project/bbot/))
+### Installation
  
 Installing OMV is as simple as cloning and running a Python project on any OS. It requires just a terminal and Python 3.9+. 
 
