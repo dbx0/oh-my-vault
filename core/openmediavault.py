@@ -2,6 +2,7 @@ import requests
 import time
 from utils.terminal import print_colored
 from core.enums import COLORS
+import json
 
 def __send_request(url, payload, headers, timeout=None):
 
@@ -90,7 +91,7 @@ def get_system_info(base_url, cookies):
         return
 
     try:
-        resp = response.json()
+        resp = json.loads(response.text)
         resp = resp["response"]
 
         if 'hostname' in resp:
@@ -112,7 +113,7 @@ def get_system_info(base_url, cookies):
         return system_info
 
     except:
-        print_colored(f"[!] Failed to parse response: {response.json()}")
+        print_colored(f"[!] Failed to parse response: {response.json()}", COLORS.RED)
 
     
 def get_system_users(base_url, cookies):
@@ -139,11 +140,11 @@ def get_system_users(base_url, cookies):
     users_info = []
 
     if not response:
-        print("[!] Unable to get Users Info")
+        print_colored("[!] Unable to get Users Info", COLORS.RED)
         return users_info
 
     try:
-        resp = response.json()
+        resp = json.loads(response.text)
         resp = resp["response"]
 
         for user in resp:
@@ -161,8 +162,7 @@ def get_system_users(base_url, cookies):
         return users_info
 
     except:
-        print(response.json())
-        print(f"[!] Failed to parse response: {url}")
+        print_colored(f"[!] Failed to parse response: {response.text}", COLORS.RED)
 
 
 def get_shared_folders(base_url, cookies):
@@ -194,11 +194,11 @@ def get_shared_folders(base_url, cookies):
     shared_folders = []
 
     if not response:
-        print("[!] Unable to get Shared folders")
+        print_colored("[!] Unable to get Shared folders", COLORS.RED)
         return shared_folders
 
     try:
-        resp = response.json()
+        resp = json.loads(response.text)
         resp = resp["response"]["data"]
 
         for shared in resp:
@@ -212,8 +212,7 @@ def get_shared_folders(base_url, cookies):
         return shared_folders
 
     except:
-        print(response.json())
-        print(f"[!] Failed to parse response: {url}")
+        print_colored(f"[!] Failed to parse response: {response.text}", COLORS.RED)
 
 
 def execute_cmd(target, cookies, command, get_output=False):
@@ -460,7 +459,6 @@ def _delete_task(base_url, cookies, task_uuid):
         return False
 
     try:
-        
         resp = response.json()
         output = resp["error"]
 
