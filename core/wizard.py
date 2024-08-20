@@ -35,13 +35,15 @@ def _choose_auth_action():
     options = {
         1: AUTHACTIONS.TESTDEFAULT,
         2: AUTHACTIONS.BRUTEFORCE,
-        3: AUTHACTIONS.USEEXISTING
+        3: AUTHACTIONS.USEEXISTING,
+        4: AUTHACTIONS.RUN
     }
 
     print_bold("""[*] Choose an action to execute on selected targets:
     [1] Test default credentials
     [2] Brute force credentials
-    [3] Test existing credentials""")
+    [3] Test existing credentials
+    [4] Skip to execution""")
 
     while True:
         try:
@@ -186,7 +188,11 @@ def _test_auth(targets, ctargets):
     
     choosen_auth_method = _choose_auth_action()
 
-    if choosen_auth_method == AUTHACTIONS.TESTDEFAULT:
+    if choosen_auth_method == AUTHACTIONS.RUN:
+        for target in ctargets:
+            success_results[target['host']] = {"username": target['username'], "password": target['password']}
+
+    elif choosen_auth_method == AUTHACTIONS.TESTDEFAULT:
 
         success_results = actions.test_default_credentials(targets)
 
