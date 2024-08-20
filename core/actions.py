@@ -1,10 +1,9 @@
 from core import openmediavault
 from core.enums import OMVDEFAULTCREDS
 from core.settings import PYTHON_REVERSE_SHELL
+import threading
 
-def test_default_credentials(target_list):
-
-    success_results = {}
+def _test_default_credentials_batch(target_list, success_results):
 
     for target in target_list:
         cookie = openmediavault.authenticate(target, OMVDEFAULTCREDS.USERNAME.value, OMVDEFAULTCREDS.PASSWORD.value)
@@ -12,6 +11,23 @@ def test_default_credentials(target_list):
         if cookie:
             success_results[target] = {"username": OMVDEFAULTCREDS.USERNAME.value, "password": OMVDEFAULTCREDS.PASSWORD.value}
 
+def test_default_credentials(target_list):
+    num_items = len(target_list)
+    chunk_size = 1000
+    success_results = {}
+
+    threads = []
+
+    for i in range(0, num_items, chunk_size):
+        start = i
+        end = min(i + chunk_size, num_items)
+        thread = threading.Thread(target=_test_default_credentials_batch, args=(target_list[start:end], success_results))
+        threads.append(thread)
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+    
     return success_results
 
 def bruteforce_credentials(target_list, username_list, password_list):
